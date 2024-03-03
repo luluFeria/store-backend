@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Getter
 @Setter
@@ -24,7 +21,8 @@ public class AlumnoRequest {
   private String secondName;
 
   @NotNull(message = "Edad obligatorio")
-  @Min(value=2, message = "La edad debe contener minimo 2 digitos")
+  @Min(value = 18, message = "El valor debe ser igual o mayor que 18")
+  @Max(value = 120, message = "El valor debe ser igual o menor que 120")
   private Integer age;
 
   private String gender;
