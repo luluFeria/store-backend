@@ -1,7 +1,6 @@
 package com.app.tienda.model.request;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 public class PersonRequest {
   @NotBlank(message = "El nombre no puede estar en blanco")
