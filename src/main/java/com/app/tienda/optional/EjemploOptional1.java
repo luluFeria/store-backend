@@ -11,7 +11,7 @@ public class EjemploOptional1 {
 
   //Nota: Hacer uso de cualquiera de los 2 if, dependiendo el caso
 
-    if (longitud.isPresent()) { //Verifica si existe un valor distinto a null
+    if (longitud.isPresent()) { //Verifica si existe un valor distinto a null en el optional
       System.out.println("Hay valor: ");
       System.out.println(longitud.get());  // con .get se obtiene el valor que tiene el optional
 
