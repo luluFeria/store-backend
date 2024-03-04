@@ -1,8 +1,5 @@
 package com.app.tienda.service;
 
-import com.app.tienda.model.request.Director;
-import com.app.tienda.model.request.Policia;
-
 import java.util.ArrayList;
 
 public interface IDirectorService {
