@@ -1,6 +1,5 @@
 package com.app.tienda.service.impl;
 
-import com.app.tienda.model.request.Director;
 import com.app.tienda.service.IDirectorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
