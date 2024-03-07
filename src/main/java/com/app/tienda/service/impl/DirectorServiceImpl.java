@@ -1,6 +1,8 @@
 package com.app.tienda.service.impl;
 
 import com.app.tienda.entity.DirectorEntity;
+import com.app.tienda.exception.InternalServerException;
+import com.app.tienda.model.request.DirectorRequest;
 import com.app.tienda.model.response.DirectorResponse;
 import com.app.tienda.repository.DirectorRepository;
 import com.app.tienda.service.IDirectorService;
@@ -32,4 +34,25 @@ public class DirectorServiceImpl implements IDirectorService {
             .map(directorEntity -> modelMapper.map(directorEntity, DirectorResponse.class))
             .collect(Collectors.toList());
   }
+
+  @Override
+  public DirectorResponse save(DirectorRequest directorRequest) {
+    log.info("DirectorServiceImpl - entrando a funcion save");
+
+    try {
+      log.info("Estoy entrando al try");
+      DirectorEntity directorEntity = modelMapper.map(directorRequest, DirectorEntity.class);
+      DirectorEntity savedDirector = directorRepository.save(directorEntity);
+      return modelMapper.map(savedDirector, DirectorResponse.class);
+    } catch (Exception e) {
+      log.info("Entrando al catch");
+      log.error("Hubo un error al crear el director: {}", e.getMessage());
+      throw new InternalServerException("Hubo un error al crear el director");
+    }
+  }
+
+
+
+
+
 }
