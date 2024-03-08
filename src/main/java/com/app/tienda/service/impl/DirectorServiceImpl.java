@@ -2,6 +2,7 @@ package com.app.tienda.service.impl;
 
 import com.app.tienda.entity.DirectorEntity;
 import com.app.tienda.exception.InternalServerException;
+import com.app.tienda.exception.ResourceNotFoundException;
 import com.app.tienda.model.request.DirectorRequest;
 import com.app.tienda.model.response.DirectorResponse;
 import com.app.tienda.repository.DirectorRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,8 +53,15 @@ public class DirectorServiceImpl implements IDirectorService {
     }
   }
 
+  @Override
+  public DirectorResponse getById(Long id) {
+    log.info("DirectorServiceImpl - entrando a funcion getById");
 
+    Optional<DirectorEntity> directorOptional = directorRepository.findById(id);
 
-
+    return directorOptional
+            .map(directorEntity -> modelMapper.map(directorEntity, DirectorResponse.class))
+            .orElseThrow(() -> new ResourceNotFoundException("Director no encontrado con ID: " + id));
+  }
 
 }

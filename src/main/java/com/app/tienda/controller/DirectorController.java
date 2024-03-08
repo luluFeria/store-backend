@@ -53,6 +53,14 @@ public class DirectorController {
     return ResponseEntity.status(HttpStatus.CREATED).body(directorSaved);
   }
 
+  @GetMapping("/{id}")
+  private ResponseEntity<DirectorResponse> finById(@PathVariable Long id) {
+    log.info("Entrando a la funcion findById");
+    log.info("Parameter: {}", id);
+    log.info("Fetching director by id: {}", id);
+
+    return new ResponseEntity<>(directorService.getById(id), HttpStatus.OK);
+  }
 
 
 
