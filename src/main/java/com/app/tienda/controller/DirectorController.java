@@ -62,6 +62,33 @@ public class DirectorController {
     return new ResponseEntity<>(directorService.getById(id), HttpStatus.OK);
   }
 
+  @PutMapping("/{id}")
+  private ResponseEntity<?> update(
+          @PathVariable Long id,
+          @Valid @RequestBody DirectorRequest directorRequest,
+          BindingResult bindingResult
+  ) {
+    log.info("Entrando a la funcion update");
+    log.info("Parameter id {}", id);
+    log.info("Updating student by id {}", id);
+
+    if (bindingResult.hasErrors()) {
+      log.info("Se ha producido un error: {}", bindingResult.hasErrors());
+
+      List<String> errors = bindingResult.getFieldErrors().stream()
+          .map(error -> error.getField() + ": " + error.getDefaultMessage())
+          .collect(Collectors.toList());
+
+      log.info("errors {}", errors);
+
+      return ResponseEntity.badRequest().body(errors);
+    }
+
+    DirectorResponse directorUpdated = directorService.update(id, directorRequest);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(directorUpdated);
+  }
+
 
 
 }

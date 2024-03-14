@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,5 +64,32 @@ public class DirectorServiceImpl implements IDirectorService {
             .map(directorEntity -> modelMapper.map(directorEntity, DirectorResponse.class))
             .orElseThrow(() -> new ResourceNotFoundException("Director no encontrado con ID: " + id));
   }
+
+  @Override
+  public DirectorResponse update(Long id, DirectorRequest directorRequest) {
+    log.info("DirectorServiceImpl - entrando a funcion update");
+
+    try {
+      log.info("Estoy entrando al try");
+
+      Optional<DirectorEntity> directorOptional = directorRepository.findById(id);
+
+      if (directorOptional.isPresent()) {
+        DirectorEntity directorEntity = directorOptional.get();
+        modelMapper.map(directorRequest, directorEntity);
+
+        DirectorEntity directorUpdated = directorRepository.save(directorEntity);
+        return modelMapper.map(directorUpdated, DirectorResponse.class);
+      } else {
+        throw new ResourceNotFoundException("Director no encontrado con ID: " + id);
+      }
+    } catch (DataAccessException e) {
+      log.info("Entrando al catch");
+      log.error("Hubo un error al actualizar el director: {}", e.getMessage());
+      throw new InternalServerException("Error al actualizar el director con ID: " + id, e);
+    }
+  }
+
+
 
 }
