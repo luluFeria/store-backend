@@ -90,6 +90,24 @@ public class DirectorServiceImpl implements IDirectorService {
     }
   }
 
+  @Override
+  public void delete(Long id) {
+    log.info("DirectorServiceImpl - entrando a funcion delete");
 
+    try {
+      log.info("Estoy entrando al try");
 
+      Optional<DirectorEntity> directorOptional = directorRepository.findById(id);
+
+      if (directorOptional.isPresent()) {
+        directorRepository.deleteById(id);
+      } else {
+        throw new ResourceNotFoundException("Director no encontrado con ID: " + id);
+      }
+    } catch (DataAccessException e) {
+      log.info("Entrando al catch");
+      log.error("Hubo un error al eliminar el director: {}", e.getMessage());
+      throw new InternalServerException("Error al eliminar el director con ID: " + id);
+    }
+  }
 }

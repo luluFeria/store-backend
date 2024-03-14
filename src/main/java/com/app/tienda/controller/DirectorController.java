@@ -89,6 +89,14 @@ public class DirectorController {
     return ResponseEntity.status(HttpStatus.CREATED).body(directorUpdated);
   }
 
+  @DeleteMapping("/{id}")
+  private ResponseEntity<?> delete(@PathVariable Long id) {
+    log.info("Entrando a la funcion delete");
+    log.info("Parameter: {}", id);
 
+    directorService.delete(id);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
 
 }

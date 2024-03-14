@@ -10,4 +10,5 @@ public interface IDirectorService {
   public DirectorResponse save(DirectorRequest directorRequest);
   public DirectorResponse getById(Long id);
   public DirectorResponse update(Long id, DirectorRequest directorRequest);
+  public void delete(Long id);
 }
