@@ -304,3 +304,8 @@ insert into domicilios values(3, 'Madero', '12345', 'Centro', 7, None, 'Libertad
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "insert into domicilios values(4, 'Guzman', '56789', 'Nuevo Mexico', 18, 25, [*]'Nuevo Horizonte Residencias'')"
 Syntax error in SQL statement "insert into domicilios values(4, 'Guzman', '56789', 'Nuevo Mexico', 18, 25, [*]'Nuevo Horizonte Residencias'')"; SQL statement:
 insert into domicilios values(4, 'Guzman', '56789', 'Nuevo Mexico', 18, 25, 'Nuevo Horizonte Residencias'') [42000-214]
+2024-03-14 18:38:17 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM PERROS \000d\000ainsert [*]into perros values(1,  6, 'Boxer', 'Hembra', 'Bella')"
+Syntax error in SQL statement "SELECT * FROM PERROS \000d\000ainsert [*]into perros values(1,  6, 'Boxer', 'Hembra', 'Bella')"; SQL statement:
+SELECT * FROM PERROS 
+insert into perros values(1,  6, 'Boxer', 'Hembra', 'Bella') [42000-214]
