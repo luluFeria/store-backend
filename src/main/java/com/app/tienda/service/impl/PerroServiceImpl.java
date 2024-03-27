@@ -1,6 +1,8 @@
 package com.app.tienda.service.impl;
 
 import com.app.tienda.entity.PerroEntity;
+import com.app.tienda.exception.InternalServerException;
+import com.app.tienda.model.request.PerroRequest;
 import com.app.tienda.model.response.PerroResponse;
 import com.app.tienda.repository.PerroRepository;
 import com.app.tienda.service.IPerroService;
@@ -31,5 +33,19 @@ public class PerroServiceImpl implements IPerroService {
             .map(perroEntity -> modelMapper.map(perroEntity, PerroResponse.class))
             .collect(Collectors.toList());
   }
+
+  @Override
+  public PerroResponse save(PerroRequest perroRequest) {
+
+    try {
+      PerroEntity perroEntity = modelMapper.map(perroRequest, PerroEntity.class);
+      PerroEntity savedPerro = perroRepository.save(perroEntity);
+      return modelMapper.map(savedPerro, PerroResponse.class);
+    } catch (Exception e) {
+      log.error("Hubo un error al crear el perro: {}", e.getMessage());
+      throw new InternalServerException("Hubo un error al crear el perro");
+    }
+  }
+
 
 }
