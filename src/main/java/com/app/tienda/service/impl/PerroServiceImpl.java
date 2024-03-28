@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,6 +58,27 @@ public class PerroServiceImpl implements IPerroService {
     return perroOptional
             .map(perroEntity -> modelMapper.map(perroEntity, PerroResponse.class))
             .orElseThrow(() -> new ResourceNotFoundException("Perro no encontrado con ID: " + id));
+  }
+
+  @Override
+  public PerroResponse update(Long id, PerroRequest perroRequest) {
+
+    try {
+      Optional<PerroEntity> perroOptional = perroRepository.findById(id);
+
+      if (perroOptional.isPresent()) {
+        PerroEntity perroEntity = perroOptional.get();
+        modelMapper.map(perroRequest, perroEntity);
+
+        PerroEntity perroUpdated = perroRepository.save(perroEntity);
+        return modelMapper.map(perroUpdated, PerroResponse.class);
+      } else {
+        throw new ResourceNotFoundException("Perro no encontrado con ID: " + id);
+      }
+    } catch (DataAccessException e) {
+      log.error("Hubo un error al actualizar el perro: {}", e.getMessage());
+      throw new InternalServerException("Error al actualizar el perro con ID: " + id, e);
+    }
   }
 
 

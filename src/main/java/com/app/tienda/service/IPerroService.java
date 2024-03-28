@@ -9,4 +9,6 @@ public interface IPerroService {
   public List<PerroResponse> findAllPerros();
   public PerroResponse save(PerroRequest perroRequest);
   public PerroResponse getById(Long id);
+  public PerroResponse update(Long id, PerroRequest perroRequest);
+
 }

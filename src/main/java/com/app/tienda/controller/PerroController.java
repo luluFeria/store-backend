@@ -54,4 +54,32 @@ public class PerroController {
     return new ResponseEntity<>(perroService.getById(id), HttpStatus.OK);
   }
 
+  @PutMapping("/{id}")
+  private ResponseEntity<?> update(
+          @PathVariable Long id,
+          @Valid @RequestBody PerroRequest perroRequest,
+          BindingResult bindingResult
+  ) {
+    if (bindingResult.hasErrors()) {
+
+      List<String> errors = bindingResult.getFieldErrors().stream()
+             .map(error -> error.getField() + ": " + error.getDefaultMessage())
+             .collect(Collectors.toList());
+
+      return ResponseEntity.badRequest().body(errors);
+    }
+
+    PerroResponse perroUpdated = perroService.update(id, perroRequest);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(perroUpdated);
+  }
+
+
+
+
+
+
+
+
+
 }
