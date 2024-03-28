@@ -2,6 +2,7 @@ package com.app.tienda.service.impl;
 
 import com.app.tienda.entity.PerroEntity;
 import com.app.tienda.exception.InternalServerException;
+import com.app.tienda.exception.ResourceNotFoundException;
 import com.app.tienda.model.request.PerroRequest;
 import com.app.tienda.model.response.PerroResponse;
 import com.app.tienda.repository.PerroRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +47,16 @@ public class PerroServiceImpl implements IPerroService {
       log.error("Hubo un error al crear el perro: {}", e.getMessage());
       throw new InternalServerException("Hubo un error al crear el perro");
     }
+  }
+
+  @Override
+  public PerroResponse getById(Long id) {
+
+    Optional<PerroEntity> perroOptional = perroRepository.findById(id);
+
+    return perroOptional
+            .map(perroEntity -> modelMapper.map(perroEntity, PerroResponse.class))
+            .orElseThrow(() -> new ResourceNotFoundException("Perro no encontrado con ID: " + id));
   }
 
 

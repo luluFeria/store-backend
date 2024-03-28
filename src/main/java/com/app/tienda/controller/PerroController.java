@@ -48,4 +48,10 @@ public class PerroController {
    return ResponseEntity.status(HttpStatus.CREATED).body(perroSaved);
   }
 
+  @GetMapping("/{id}")
+  private ResponseEntity<PerroResponse> findById(@PathVariable Long id) {
+
+    return new ResponseEntity<>(perroService.getById(id), HttpStatus.OK);
+  }
+
 }
