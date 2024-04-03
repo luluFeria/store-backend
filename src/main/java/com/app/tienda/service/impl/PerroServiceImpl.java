@@ -1,5 +1,6 @@
 package com.app.tienda.service.impl;
 
+import com.app.tienda.constant.Message;
 import com.app.tienda.entity.PerroEntity;
 import com.app.tienda.exception.InternalServerException;
 import com.app.tienda.exception.ResourceNotFoundException;
@@ -46,7 +47,7 @@ public class PerroServiceImpl implements IPerroService {
       return modelMapper.map(savedPerro, PerroResponse.class);
     } catch (Exception e) {
       log.error("Hubo un error al crear el perro: {}", e.getMessage());
-      throw new InternalServerException("Hubo un error al crear el perro");
+      throw new InternalServerException(Message.SAVE_ERROR + "el perro");
     }
   }
 
@@ -77,9 +78,24 @@ public class PerroServiceImpl implements IPerroService {
       }
     } catch (DataAccessException e) {
       log.error("Hubo un error al actualizar el perro: {}", e.getMessage());
-      throw new InternalServerException("Error al actualizar el perro con ID: " + id, e);
+      throw new InternalServerException( Message.UPDATE_ERROR + "el perro con ID: " + id, e);
     }
   }
 
+  @Override
+  public void delete(Long id) {
 
+    try {
+      Optional<PerroEntity> perroOptional = perroRepository.findById(id);
+
+      if (perroOptional.isPresent()) {
+        perroRepository.deleteById(id);
+      } else {
+        throw new ResourceNotFoundException("Perro no encontrado con ID: " + id);
+      }
+    } catch (DataAccessException e) {
+      log.error("Hubo un error al eliminar el perro: {}", e.getMessage());
+      throw new InternalServerException(Message.DELETE_ERROR + "el perro con ID: " + id);
+    }
+  }
 }

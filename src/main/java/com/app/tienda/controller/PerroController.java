@@ -74,12 +74,11 @@ public class PerroController {
     return ResponseEntity.status(HttpStatus.CREATED).body(perroUpdated);
   }
 
+  @DeleteMapping("/{id}")
+  private ResponseEntity<?> delete(@PathVariable Long id) {
 
+    perroService.delete(id);
 
-
-
-
-
-
-
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
 }

@@ -10,5 +10,5 @@ public interface IPerroService {
   public PerroResponse save(PerroRequest perroRequest);
   public PerroResponse getById(Long id);
   public PerroResponse update(Long id, PerroRequest perroRequest);
-
+  public void delete(Long id);
 }
