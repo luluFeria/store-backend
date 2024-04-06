@@ -25,6 +25,7 @@ public class PerroController {
 
   @GetMapping
   public List<PerroResponse> getAllPerros() {
+    log.info("Fetching all the dogs");
 
     return perroService.findAllPerros();
   }
@@ -34,6 +35,8 @@ public class PerroController {
           @Valid @RequestBody PerroRequest perroRequest,
           BindingResult bindingResult
   ) {
+    log.info("Creating dog: {}", perroRequest);
+    
    if (bindingResult.hasErrors()) {
 
      List<String> errors = bindingResult.getFieldErrors().stream()
@@ -50,6 +53,7 @@ public class PerroController {
 
   @GetMapping("/{id}")
   private ResponseEntity<PerroResponse> findById(@PathVariable Long id) {
+    log.info("Fetching dog by id: {}", id);
 
     return new ResponseEntity<>(perroService.getById(id), HttpStatus.OK);
   }
@@ -60,6 +64,8 @@ public class PerroController {
           @Valid @RequestBody PerroRequest perroRequest,
           BindingResult bindingResult
   ) {
+    log.info("Updating dog by id {}", id);
+
     if (bindingResult.hasErrors()) {
 
       List<String> errors = bindingResult.getFieldErrors().stream()
@@ -76,6 +82,7 @@ public class PerroController {
 
   @DeleteMapping("/{id}")
   private ResponseEntity<?> delete(@PathVariable Long id) {
+    log.info("Deleting dog with id: {}", id);
 
     perroService.delete(id);
 

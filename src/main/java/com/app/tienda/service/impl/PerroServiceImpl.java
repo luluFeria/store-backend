@@ -32,6 +32,7 @@ public class PerroServiceImpl implements IPerroService {
   public List<PerroResponse> findAllPerros() {
 
     List<PerroEntity> perros = perroRepository.findAll();
+    log.info("PerroServiceImpl - find all dogs");
 
     return perros.stream()
             .map(perroEntity -> modelMapper.map(perroEntity, PerroResponse.class))
@@ -40,6 +41,7 @@ public class PerroServiceImpl implements IPerroService {
 
   @Override
   public PerroResponse save(PerroRequest perroRequest) {
+    log.info("PerroServiceImpl - save the dog");
 
     try {
       PerroEntity perroEntity = modelMapper.map(perroRequest, PerroEntity.class);
@@ -53,6 +55,7 @@ public class PerroServiceImpl implements IPerroService {
 
   @Override
   public PerroResponse getById(Long id) {
+    log.info("PerroServiceImpl - find dog by id");
 
     Optional<PerroEntity> perroOptional = perroRepository.findById(id);
 
@@ -63,6 +66,7 @@ public class PerroServiceImpl implements IPerroService {
 
   @Override
   public PerroResponse update(Long id, PerroRequest perroRequest) {
+    log.info("PerroServiceImpl - update the dog");
 
     try {
       Optional<PerroEntity> perroOptional = perroRepository.findById(id);
@@ -84,6 +88,7 @@ public class PerroServiceImpl implements IPerroService {
 
   @Override
   public void delete(Long id) {
+    log.info("PerroServiceImpl - delete the dog");
 
     try {
       Optional<PerroEntity> perroOptional = perroRepository.findById(id);
