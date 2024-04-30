@@ -309,3 +309,7 @@ org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SEL
 Syntax error in SQL statement "SELECT * FROM PERROS \000d\000ainsert [*]into perros values(1,  6, 'Boxer', 'Hembra', 'Bella')"; SQL statement:
 SELECT * FROM PERROS 
 insert into perros values(1,  6, 'Boxer', 'Hembra', 'Bella') [42000-214]
+2024-04-25 22:29:45 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "[*]selec * from customers"; se esperaba "SAVEPOINT, SCRIPT, SHUTDOWN, SHOW"
+Syntax error in SQL statement "[*]selec * from customers"; expected "SAVEPOINT, SCRIPT, SHUTDOWN, SHOW"; SQL statement:
+selec * from customers [42001-214]
