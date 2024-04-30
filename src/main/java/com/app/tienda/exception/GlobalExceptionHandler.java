@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-//Esta clase @ControlAdvice escucha las excepciones personalizadas ejecutadas en todo el proyecto
+//Esta clase @ControlAdvice es un interceptor que escucha las excepciones personalizadas ejecutadas en todo el proyecto
 @ControllerAdvice
 public class GlobalExceptionHandler {
   @ExceptionHandler(ResourceNotFoundException.class)

@@ -88,7 +88,7 @@ public class PerroServiceImpl implements IPerroService {
 
   @Override
   public void delete(Long id) {
-    log.info("PerroServiceImpl - delete the dog");
+    log.info("PerroServiceImpl - delete the dog: {}" , id);
 
     try {
       Optional<PerroEntity> perroOptional = perroRepository.findById(id);
