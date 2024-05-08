@@ -17,8 +17,11 @@ public class AddressEntity {
   private Long id;
 
   private String city;
+
   private String municipality;
+
   private String colony;
+
   private String street;
 
 }
