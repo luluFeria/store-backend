@@ -2,12 +2,12 @@ package com.app.tienda.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-//Esta clase @ControlAdvice es un interceptor que escucha las excepciones personalizadas ejecutadas en todo el proyecto
-@ControllerAdvice
+//Esta clase @RestControlAdvice es un interceptor que escucha las excepciones personalizadas ejecutadas en todo el proyecto
+@RestControllerAdvice
 public class GlobalExceptionHandler {
   @ExceptionHandler(ResourceNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
