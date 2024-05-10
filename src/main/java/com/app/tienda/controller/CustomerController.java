@@ -2,10 +2,8 @@ package com.app.tienda.controller;
 
 import com.app.tienda.model.request.CustomerRequest;
 import com.app.tienda.model.response.CustomerResponse;
-import com.app.tienda.model.response.PersonResponse;
 import com.app.tienda.service.ICustomerService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +34,6 @@ public class CustomerController {
           BindingResult bindingResult
   ) {
     log.info("Creating customer: {}", customerRequest);
-    log.info("Name: {}", customerRequest.getName());
 
     if (bindingResult.hasErrors()) {
       log.info("Se ha producido un error: {}", bindingResult.hasErrors());
@@ -44,8 +41,6 @@ public class CustomerController {
       List<String> errors = bindingResult.getFieldErrors().stream()
               .map(error -> error.getField() + ": " + error.getDefaultMessage())
               .collect(Collectors.toList());
-
-      log.info("errors: {}", errors);
 
       return ResponseEntity.badRequest().body(errors);
     }
@@ -56,12 +51,31 @@ public class CustomerController {
   }
 
   @GetMapping("/{id}")
-  private ResponseEntity<CustomerResponse> finById(@PathVariable Long id) {
+  private ResponseEntity<CustomerResponse> findById(@PathVariable Long id) {
     log.info("Fetching customer by id: {}", id);
-    
-    return null;
+
+    return new ResponseEntity<>(customerService.getById(id), HttpStatus.OK);
   }
 
+  @GetMapping("/city/{city}")
+  private ResponseEntity<List<CustomerResponse>> findByCity(@PathVariable String city) {
+    log.info("Fetching customer by city: {}", city);
 
+    return new ResponseEntity<>(customerService.getByCity(city), HttpStatus.OK);
+  }
+
+  @GetMapping("/name/{name}")
+  private ResponseEntity<CustomerResponse> findByName(@PathVariable String name) {
+    log.info("Fetching customer by name: {}", name);
+
+    return new ResponseEntity<>(customerService.getByName(name), HttpStatus.OK);
+  }
+
+  @GetMapping("/email/{email}")
+  private ResponseEntity<CustomerResponse> findByEmail(@PathVariable String email) {
+    log.info("Fetching customer by email: {}", email);
+
+    return new ResponseEntity<>(customerService.getByEmail(email), HttpStatus.OK);
+  }
 
 }
