@@ -12,4 +12,5 @@ public interface ICustomerService {
   public List<CustomerResponse> getByCity(String city);
   public CustomerResponse getByName(String name);
   public CustomerResponse getByEmail(String email);
+  public CustomerResponse update(Long id, CustomerRequest customerRequest);
 }

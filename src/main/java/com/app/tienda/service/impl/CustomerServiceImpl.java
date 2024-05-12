@@ -13,6 +13,7 @@ import com.app.tienda.service.ICustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -112,6 +113,28 @@ public class CustomerServiceImpl implements ICustomerService {
     return customerOptional
             .map(customerEntity -> modelMapper.map(customerEntity, CustomerResponse.class))
             .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con email: " + email));
+  }
+
+  @Override
+  public CustomerResponse update(Long id, CustomerRequest customerRequest) {
+    log.info("CustomerServiceImpl - update: {} {}", id, customerRequest);
+
+    try {
+      Optional<CustomerEntity> customerOptional = customerRepository.findById(id);
+
+      if (customerOptional.isPresent()) {
+        CustomerEntity customerEntity = customerOptional.get();
+        modelMapper.map(customerRequest, customerEntity);
+
+        CustomerEntity customerUpdated = customerRepository.save(customerEntity);
+        return modelMapper.map(customerUpdated, CustomerResponse.class);
+      } else {
+        throw new ResourceNotFoundException("No se encontró el cliente con ID: " + id);
+      }
+    } catch (DataAccessException e) {
+      log.error("Hubo un error al actualizar el cliente: {}", e.getMessage());
+      throw new InternalServerException("Error al actualizar el cliente con ID: " + id, e);
+    }
   }
 
 
