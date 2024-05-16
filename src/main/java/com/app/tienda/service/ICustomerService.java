@@ -13,4 +13,5 @@ public interface ICustomerService {
   public CustomerResponse getByName(String name);
   public CustomerResponse getByEmail(String email);
   public CustomerResponse update(Long id, CustomerRequest customerRequest);
+  public void delete(Long id);
 }

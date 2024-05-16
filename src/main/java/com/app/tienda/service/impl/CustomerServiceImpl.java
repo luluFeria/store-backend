@@ -137,5 +137,23 @@ public class CustomerServiceImpl implements ICustomerService {
     }
   }
 
+  @Override
+  public void delete(Long id) {
+    log.info("CustomerServiceImpl - delete: {}", id);
 
+    try {
+      log.info("Entrando al try");
+
+      Optional<CustomerEntity> customerOptional = customerRepository.findById(id);
+
+      if (customerOptional.isPresent()) {
+        customerRepository.deleteById(id);
+      } else {
+        throw new ResourceNotFoundException("No se encontró el cliente con ID: " + id);
+      }
+    } catch (DataAccessException e) {
+      log.error("Hubo un error al eliminar el cliente: {}", e.getMessage());
+      throw new InternalServerException("Error al eliminar el cliente con ID: " + id);
+    }
+  }
 }

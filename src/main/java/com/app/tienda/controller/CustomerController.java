@@ -101,6 +101,12 @@ public class CustomerController {
     return ResponseEntity.status(HttpStatus.CREATED).body(customerUpdated);
   }
 
+  @DeleteMapping("/{id}")
+  private ResponseEntity<?> delete(@PathVariable Long id) {
+    log.info("Deleting customer with id: {}", id);
 
+    customerService.delete(id);
 
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
+}
