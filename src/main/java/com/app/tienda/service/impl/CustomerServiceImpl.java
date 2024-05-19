@@ -6,7 +6,6 @@ import com.app.tienda.exception.InternalServerException;
 import com.app.tienda.exception.ResourceNotFoundException;
 import com.app.tienda.model.request.CustomerRequest;
 import com.app.tienda.model.response.CustomerResponse;
-import com.app.tienda.model.response.PersonResponse;
 import com.app.tienda.repository.AddressRepository;
 import com.app.tienda.repository.CustomerRepository;
 import com.app.tienda.service.ICustomerService;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Transactional
 @Slf4j
 @Service
 public class CustomerServiceImpl implements ICustomerService {
