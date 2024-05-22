@@ -45,7 +45,6 @@ public class CustomerServiceImpl implements ICustomerService {
             .collect(Collectors.toList());
   }
 
-  @Transactional
   @Override
   public CustomerResponse save(CustomerRequest customerRequest) {
     log.info("CustomerServiceImpl - save: {}", customerRequest);
