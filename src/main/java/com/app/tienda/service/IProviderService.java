@@ -8,5 +8,6 @@ import java.util.List;
 public interface IProviderService {
   public List<ProviderResponse> findAll();
   public ProviderResponse save(ProviderRequest providerRequest);
+  public ProviderResponse getById(Long id);
 }
 

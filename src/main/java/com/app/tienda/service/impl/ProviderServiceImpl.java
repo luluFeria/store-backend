@@ -4,6 +4,7 @@ import com.app.tienda.constant.Message;
 import com.app.tienda.entity.AddressEntity;
 import com.app.tienda.entity.ProviderEntity;
 import com.app.tienda.exception.InternalServerException;
+import com.app.tienda.exception.ResourceNotFoundException;
 import com.app.tienda.model.request.ProviderRequest;
 import com.app.tienda.model.response.ProviderResponse;
 import com.app.tienda.repository.AddressRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -64,6 +66,16 @@ public class ProviderServiceImpl implements IProviderService {
     }
   }
 
+  @Override
+  public ProviderResponse getById(Long id) {
+    log.info("ProviderServiceImpl - find provider by id {}", id);
+
+    Optional<ProviderEntity> providerOptional = providerRepository.findById(id);
+
+    return providerOptional
+            .map(providerEntity -> modelMapper.map(providerEntity, ProviderResponse.class))
+            .orElseThrow(() -> new ResourceNotFoundException(Message.ID_NOT_FOUND + ": " + id));
+  }
 
 
 }

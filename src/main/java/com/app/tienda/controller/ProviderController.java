@@ -50,6 +50,13 @@ public class ProviderController {
     return ResponseEntity.status(HttpStatus.CREATED).body(providerSaved);
   }
 
+  @GetMapping("/{id}")
+  private ResponseEntity<ProviderResponse> findById(@PathVariable Long id) {
+    log.info("Fetching provider by id: {}", id);
+
+    return new ResponseEntity<>(providerService.getById(id), HttpStatus.OK);
+  }
+
 
 
 }
