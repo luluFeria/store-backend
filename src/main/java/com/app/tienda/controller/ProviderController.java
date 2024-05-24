@@ -64,6 +64,13 @@ public class ProviderController {
     return new ResponseEntity<>(providerService.getByCity(city), HttpStatus.OK);
   }
 
+  @GetMapping("/name/{name}")
+  private ResponseEntity<List<ProviderResponse>> findByName(@PathVariable String name) {
+    log.info("Fetching provider by name: {}", name);
+
+    return new ResponseEntity<>(providerService.getByName(name), HttpStatus.OK);
+  }
+
 
 
 }

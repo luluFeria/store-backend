@@ -93,4 +93,15 @@ public class ProviderServiceImpl implements IProviderService {
             .collect(Collectors.toList());
   }
 
+  @Override
+  public List<ProviderResponse> getByName(String name) {
+    log.info("ProviderServiceImpl - find provider by name {}", name);
+
+    List<ProviderEntity> providerName = providerRepository.findByName(name);
+
+    return providerName.stream().
+            map(providerEntity -> modelMapper.map(providerEntity, ProviderResponse.class))
+            .collect(Collectors.toList());
+  }
+
 }
