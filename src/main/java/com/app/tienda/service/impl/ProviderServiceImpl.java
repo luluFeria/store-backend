@@ -6,6 +6,7 @@ import com.app.tienda.entity.ProviderEntity;
 import com.app.tienda.exception.InternalServerException;
 import com.app.tienda.exception.ResourceNotFoundException;
 import com.app.tienda.model.request.ProviderRequest;
+import com.app.tienda.model.response.CustomerResponse;
 import com.app.tienda.model.response.ProviderResponse;
 import com.app.tienda.repository.AddressRepository;
 import com.app.tienda.repository.ProviderRepository;
@@ -13,7 +14,11 @@ import com.app.tienda.service.IProviderService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -77,5 +82,15 @@ public class ProviderServiceImpl implements IProviderService {
             .orElseThrow(() -> new ResourceNotFoundException(Message.ID_NOT_FOUND + ": " + id));
   }
 
+  @Override
+  public List<ProviderResponse> getByCity(String city) {
+    log.info("ProviderServiceImpl - find provider by city {}", city);
+
+    List<ProviderEntity> providerList = this.providerRepository.findByAddressCity(city);
+
+    return providerList.stream()
+            .map(providerEntity -> modelMapper.map(providerEntity, ProviderResponse.class))
+            .collect(Collectors.toList());
+  }
 
 }
