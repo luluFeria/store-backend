@@ -13,5 +13,6 @@ public interface IProviderService {
   public List<ProviderResponse> getByName(String name);
   public ProviderResponse getByEmail(String email);
   public ProviderResponse update(Long id, ProviderRequest providerRequest);
+  public void delete(Long id);
 }
 

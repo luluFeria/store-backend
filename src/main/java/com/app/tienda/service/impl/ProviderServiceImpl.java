@@ -135,5 +135,23 @@ public class ProviderServiceImpl implements IProviderService {
     }
   }
 
+  @Override
+  public void delete(Long id) {
+    log.info("ProviderServiceImpl - delete: {}", id);
+
+    try {
+      Optional<ProviderEntity> providerOptional = providerRepository.findById(id);
+
+      if (providerOptional.isPresent()) {
+        providerRepository.deleteById(id);
+      } else {
+        throw new ResourceNotFoundException("No se encontró el proveedor con ID: " + id);
+      }
+    } catch (DataAccessException e) {
+      log.error("Hubo un error al eliminar el proveedor: {}", e.getMessage());
+      throw new InternalServerException(Message.DELETE_ERROR + "el proveedor con ID: " + id);
+    }
+  }
+
 
 }

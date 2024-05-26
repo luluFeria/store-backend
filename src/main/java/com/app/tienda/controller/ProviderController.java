@@ -99,4 +99,13 @@ public class ProviderController {
 
     return ResponseEntity.status(HttpStatus.CREATED).body(providerUpdated);
   }
+
+  @DeleteMapping("/{id}")
+  private ResponseEntity<?> delete(@PathVariable Long id) {
+    log. info("Deleting provider by id: {}", id);
+
+    providerService.delete(id);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
 }
