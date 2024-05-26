@@ -71,6 +71,13 @@ public class ProviderController {
     return new ResponseEntity<>(providerService.getByName(name), HttpStatus.OK);
   }
 
+  @GetMapping("/email/{email}")
+  private ResponseEntity<ProviderResponse> findByEmail(@PathVariable String email) {
+    log.info("Fetching provider by email: {}", email);
+
+    return new ResponseEntity<>(providerService.getByEmail(email), HttpStatus.OK);
+  }
+
   @PutMapping("/{id}")
   private ResponseEntity<?> update(
           @PathVariable Long id,

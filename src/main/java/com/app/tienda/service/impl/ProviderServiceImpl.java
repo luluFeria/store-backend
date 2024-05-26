@@ -2,10 +2,12 @@ package com.app.tienda.service.impl;
 
 import com.app.tienda.constant.Message;
 import com.app.tienda.entity.AddressEntity;
+import com.app.tienda.entity.CustomerEntity;
 import com.app.tienda.entity.ProviderEntity;
 import com.app.tienda.exception.InternalServerException;
 import com.app.tienda.exception.ResourceNotFoundException;
 import com.app.tienda.model.request.ProviderRequest;
+import com.app.tienda.model.response.CustomerResponse;
 import com.app.tienda.model.response.ProviderResponse;
 import com.app.tienda.repository.AddressRepository;
 import com.app.tienda.repository.ProviderRepository;
@@ -98,6 +100,17 @@ public class ProviderServiceImpl implements IProviderService {
     return providerName.stream().
             map(providerEntity -> modelMapper.map(providerEntity, ProviderResponse.class))
             .collect(Collectors.toList());
+  }
+
+  @Override
+  public ProviderResponse getByEmail(String email) {
+    log.info("ProviderServiceImpl - find provider by email {}", email);
+
+    Optional<ProviderEntity> providerOptional = providerRepository.findByEmail(email);
+
+    return providerOptional
+            .map(providerEntity -> modelMapper.map(providerEntity, ProviderResponse.class))
+            .orElseThrow(() -> new ResourceNotFoundException("Proveedor no encontrado con email: " + email));
   }
 
   @Override

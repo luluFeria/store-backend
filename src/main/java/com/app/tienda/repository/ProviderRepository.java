@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProviderRepository extends JpaRepository<ProviderEntity, Long> {
@@ -27,6 +28,15 @@ public interface ProviderRepository extends JpaRepository<ProviderEntity, Long> 
    */
   @Query(value = "SELECT * FROM PROVIDERS WHERE name = :name", nativeQuery = true)
   List<ProviderEntity> findByName(String name);
+
+  /**
+   *  Filtrando los proveedores por email.
+   *
+   * @param email filtrar los proveedores por email.
+   * @return un {@link Optional} que contiene la entidad del proveedor si se encuentra.
+   */
+  @Query(value = "SELECT * FROM PROVIDERS WHERE email = :email", nativeQuery = true)
+  Optional<ProviderEntity> findByEmail(String email);
 }
 
 

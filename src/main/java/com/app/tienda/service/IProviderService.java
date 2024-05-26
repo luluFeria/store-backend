@@ -11,6 +11,7 @@ public interface IProviderService {
   public ProviderResponse getById(Long id);
   public List<ProviderResponse> getByCity(String city);
   public List<ProviderResponse> getByName(String name);
+  public ProviderResponse getByEmail(String email);
   public ProviderResponse update(Long id, ProviderRequest providerRequest);
 }
 
