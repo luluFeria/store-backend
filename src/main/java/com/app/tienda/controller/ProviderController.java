@@ -30,7 +30,7 @@ public class ProviderController {
   }
 
   @PostMapping
-  public ResponseEntity<?> save(
+  public ResponseEntity<Object> save(
           @Valid @RequestBody ProviderRequest providerRequest,
           BindingResult bindingResult
   ) {
@@ -71,6 +71,25 @@ public class ProviderController {
     return new ResponseEntity<>(providerService.getByName(name), HttpStatus.OK);
   }
 
+  @PutMapping("/{id}")
+  private ResponseEntity<?> update(
+          @PathVariable Long id,
+          @Valid @RequestBody ProviderRequest providerRequest,
+          BindingResult bindingResult
+  ) {
+    log.info("Updating provider by id: {}", id);
 
+    if (bindingResult.hasErrors()) {
 
+      List<String> errors = bindingResult.getFieldErrors().stream()
+              .map(error -> error.getField() + ": " + error.getDefaultMessage())
+              .collect(Collectors.toList());
+
+      return ResponseEntity.badRequest().body(errors);
+    }
+
+    ProviderResponse providerUpdated = providerService.update(id, providerRequest);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(providerUpdated);
+  }
 }

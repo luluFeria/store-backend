@@ -6,7 +6,6 @@ import com.app.tienda.entity.ProviderEntity;
 import com.app.tienda.exception.InternalServerException;
 import com.app.tienda.exception.ResourceNotFoundException;
 import com.app.tienda.model.request.ProviderRequest;
-import com.app.tienda.model.response.CustomerResponse;
 import com.app.tienda.model.response.ProviderResponse;
 import com.app.tienda.repository.AddressRepository;
 import com.app.tienda.repository.ProviderRepository;
@@ -14,11 +13,8 @@ import com.app.tienda.service.IProviderService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -103,5 +99,28 @@ public class ProviderServiceImpl implements IProviderService {
             map(providerEntity -> modelMapper.map(providerEntity, ProviderResponse.class))
             .collect(Collectors.toList());
   }
+
+  @Override
+  public ProviderResponse update(Long id, ProviderRequest providerRequest) {
+    log.info("ProviderServiceImpl - update: {} {}", id, providerRequest);
+
+    try {
+      Optional<ProviderEntity> providerOptional = providerRepository.findById(id);
+
+      if (providerOptional.isPresent()) {
+        ProviderEntity providerEntity = providerOptional.get();
+        modelMapper.map(providerRequest, providerEntity);
+
+        ProviderEntity providerUpdated = providerRepository.save(providerEntity);
+        return modelMapper.map(providerUpdated, ProviderResponse.class);
+      } else {
+        throw new ResourceNotFoundException("No se encontró el proveedor con ID: " + id);
+      }
+    } catch (DataAccessException e) {
+      log.error("Hubo un error al actualizar el proveedor: {}", e.getMessage());
+      throw new InternalServerException(Message.UPDATE_ERROR + "el proveedor con ID: " + id, e);
+    }
+  }
+
 
 }
