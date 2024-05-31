@@ -25,6 +25,7 @@ public class CustomerController {
   @GetMapping
   public List<CustomerResponse> getAll() {
     log.info("Fetching all customers");
+
     return customerService.findAllCustomer();
   }
 
