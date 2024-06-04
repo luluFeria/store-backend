@@ -27,7 +27,7 @@ public class ProductEntity {
 
   @ManyToOne
   @JoinColumn(name = "provider_id")
-  private ProviderEntity providers;
+  private ProviderEntity provider;
 
   private String category;
 }
