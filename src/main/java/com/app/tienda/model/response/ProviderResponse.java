@@ -14,15 +14,9 @@ public class ProviderResponse {
 
   private String name;
 
-  private String firstName;
-
-  private String secondName;
-
   private AddressEntity address;
 
   private String phone;
 
   private String email;
-
-  private String gender;
 }

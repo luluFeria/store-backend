@@ -17,13 +17,6 @@ public class ProviderRequest {
   @Size(min = 3, max = 20, message = "Nombre: de 3 a 20 caracteres")
   private String name;
 
-  @NotBlank(message = "Obligatorio")
-  @Size(min = 3, max = 20, message = "Apellido: de 3 a 20 caracteres")
-  private String firstName;
-
-  @Size(min = 3, max = 20, message = "Apellido: de 3 a 20 caracteres")
-  private String secondName;
-
   private AddressRequest address;
 
   @Size(max = 10, message = "Teléfono: máximo 10 dígitos")
@@ -31,6 +24,4 @@ public class ProviderRequest {
 
   @Email(message = "Correo inválido")
   private String email;
-
-  private String gender;
 }
