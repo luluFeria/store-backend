@@ -12,16 +12,11 @@ import javax.persistence.*;
 @Entity
 @Table(name="providers")
 public class ProviderEntity {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String name;
-
-  private String firstName;
-
-  private String secondName;
 
   @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "address_id", referencedColumnName = "id")
@@ -30,6 +25,4 @@ public class ProviderEntity {
   private String phone;
 
   private String email;
-
-  private String gender;
 }
