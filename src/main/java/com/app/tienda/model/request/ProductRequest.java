@@ -30,7 +30,7 @@ public class ProductRequest {
   private Integer quantityInInventory;
 
   @NotNull(message = "Obligatorio")
-  private ProviderRequest provider;
+  private Long idProvider;
 
   @NotBlank(message = "Obligatorio")
   private String category;
