@@ -19,7 +19,7 @@ public class ProductResponse {
 
   private Integer quantityInInventory;
 
-  private ProviderEntity provider;
+  private ProviderResponse provider;
 
   private String category;
 }
