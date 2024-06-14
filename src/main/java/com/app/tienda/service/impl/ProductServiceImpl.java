@@ -16,10 +16,12 @@ import com.app.tienda.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -35,6 +37,10 @@ public class ProductServiceImpl implements IProductService {
 
   @Autowired
   private ModelMapper modelMapper;
+
+  @Autowired
+  private ModelMapper modelMapperSkipId;
+
   @Override
   public List<ProductResponse> findAll() {
     log.info("ProductServiceImpl - find all");
@@ -55,7 +61,7 @@ public class ProductServiceImpl implements IProductService {
 
     try {
       ProductEntity productEntity = modelMapper.map(productRequest, ProductEntity.class);
-
+      productEntity.setId(null);
       productEntity.setProvider(provider);
       ProductEntity saved = productRepository.save(productEntity);
 
@@ -68,12 +74,40 @@ public class ProductServiceImpl implements IProductService {
 
   @Override
   public ProductResponse getById(Long id) {
-    return null;
+    log.info("ProductServiceImpl - find product by id {}", id);
+
+    Optional<ProductEntity> productOptional = productRepository.findById(id);
+
+    return productOptional
+            .map(productEntity -> modelMapper.map(productEntity, ProductResponse.class))
+            .orElseThrow(() -> new ResourceNotFoundException(Message.ID_NOT_FOUND + ": " + id));
   }
 
   @Override
+  public List<ProductResponse> findAllBySupplier(Long supplierId) {
+    log.info("ProductServiceImpl - find products by supplierId {}", supplierId);
+
+    List<ProductEntity> products = productRepository.findAll();
+
+    return products.stream()
+            .map(productEntity -> modelMapper.map(productEntity, ProductResponse.class))
+            .collect(Collectors.toList());
+  }
+  @Override
   public ProductResponse update(Long id, ProductRequest productRequest) {
-    return null;
+    try {
+      ProductEntity productEntity = productRepository.findById(id)
+              .orElseThrow(() -> new ResourceNotFoundException("No se encontró el producto con ID: " + id));;
+
+      modelMapperSkipId.map(productRequest, productEntity);
+
+      ProductEntity productUpdated = productRepository.save(productEntity);
+
+      return modelMapper.map(productUpdated, ProductResponse.class);
+    } catch (DataAccessException e) {
+      log.error("Hubo un error al actualizar el producto: {}", e.getMessage());
+      throw new InternalServerException(Message.UPDATE_ERROR + "el producto con ID: " + id, e);
+    }
   }
 
   @Override

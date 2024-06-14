@@ -10,6 +10,8 @@ public interface IProductService {
   public ProductResponse save(ProductRequest productRequest);
   public ProductResponse getById(Long id);
 
+  public List<ProductResponse> findAllBySupplier(Long supplierId);
   public ProductResponse update(Long id, ProductRequest productRequest);
   public void delete(Long id);
 }
+
