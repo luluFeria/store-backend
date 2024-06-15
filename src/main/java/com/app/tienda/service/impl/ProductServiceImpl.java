@@ -93,6 +93,18 @@ public class ProductServiceImpl implements IProductService {
             .map(productEntity -> modelMapper.map(productEntity, ProductResponse.class))
             .collect(Collectors.toList());
   }
+
+  @Override
+  public List<ProductResponse> getByName(String name) {
+    log.info("ProductServiceImpl - find product by name {}", name);
+
+    List<ProductEntity> productName = productRepository.findByName(name);
+
+    return productName.stream().
+            map(productEntity -> modelMapper.map(productEntity, ProductResponse.class))
+            .collect(Collectors.toList());
+  }
+
   @Override
   public ProductResponse update(Long id, ProductRequest productRequest) {
     try {

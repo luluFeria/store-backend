@@ -16,4 +16,13 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
   @Query(value = "SELECT * FROM PROVIDERS p INNER JOIN ADDRESS a ON p.address_id = a.id WHERE a.city = :city", nativeQuery = true)
   List<ProviderEntity> findProductsByProvider(String city);
 
+  /**
+   *  Filtrando los productos por nombre.
+   *
+   * @param name filtrar los productos por nombre.
+   * @return retorna una lista de productos que coincidan con el nombre.
+   */
+  @Query(value = "SELECT * FROM PRODUCTS WHERE name = :name", nativeQuery = true)
+  List<ProductEntity> findByName(String name);
+
 }

@@ -69,6 +69,13 @@ public class ProductController {
     );
   }
 
+  @GetMapping("/name/{name}")
+  private ResponseEntity<List<ProductResponse>> findByName(@PathVariable String name) {
+    log.info("Fetching product by name: {}", name);
+
+    return new ResponseEntity<>(productService.getByName(name), HttpStatus.OK);
+  }
+
   @PutMapping("/{id}")
   private ResponseEntity<?> update(
           @PathVariable Long id,
