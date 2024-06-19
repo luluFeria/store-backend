@@ -106,6 +106,17 @@ public class ProductServiceImpl implements IProductService {
   }
 
   @Override
+  public List<ProductResponse> getByCategory(String category) {
+    log.info("ProductServiceImpl - find product by category {}", category);
+
+    List<ProductEntity> productList = this.productRepository.findByCategory(category);
+
+    return productList.stream()
+            .map(productEntity -> modelMapper.map(productEntity, ProductResponse.class))
+            .collect(Collectors.toList());
+  }
+
+  @Override
   public ProductResponse update(Long id, ProductRequest productRequest) {
     try {
       ProductEntity productEntity = productRepository.findById(id)
@@ -124,6 +135,20 @@ public class ProductServiceImpl implements IProductService {
 
   @Override
   public void delete(Long id) {
+    log.info("ProductServiceImpl - delete: {}", id);
 
+    try {
+      Optional<ProductEntity> productOptional = productRepository.findById(id);
+
+      if (productOptional.isPresent()) {
+        productRepository.deleteById(id);
+      } else {
+        throw new ResourceNotFoundException(Message.ID_NOT_FOUND +  ": " + id);
+      }
+    } catch (DataAccessException e) {
+      log.error("Hubo un error al eliminar el producto: {}", e.getMessage());
+      throw new InternalServerException(Message.DELETE_ERROR + "el producto con ID: " + id);
+    }
   }
 }
+

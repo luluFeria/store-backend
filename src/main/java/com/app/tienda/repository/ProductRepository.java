@@ -25,4 +25,12 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
   @Query(value = "SELECT * FROM PRODUCTS WHERE name = :name", nativeQuery = true)
   List<ProductEntity> findByName(String name);
 
+  /**
+   *  Filtrando los productos por category.
+   *
+   * @param category filtrar los productos por category.
+   * @return retorna una lista de productos que coincidan con el category.
+   */
+  @Query(value = "SELECT * FROM PRODUCTS WHERE category = :category", nativeQuery = true)
+  List<ProductEntity> findByCategory(String category);
 }

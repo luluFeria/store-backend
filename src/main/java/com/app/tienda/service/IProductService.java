@@ -13,6 +13,7 @@ public interface IProductService {
   public List<ProductResponse> findAllBySupplier(Long supplierId);
   public List<ProductResponse> getByName(String name);
   public ProductResponse update(Long id, ProductRequest productRequest);
+  public List<ProductResponse> getByCategory(String name);
   public void delete(Long id);
 }
 

@@ -33,10 +33,10 @@ public class ProductController {
 
   @PostMapping
   public ResponseEntity<Object> save(
-          @Valid @RequestBody ProductRequest prroductRequest,
+          @Valid @RequestBody ProductRequest productRequest,
           BindingResult bindingResult
   ) {
-    log.info("Creating product: {}", prroductRequest);
+    log.info("Creating product: {}", productRequest);
 
     if (bindingResult.hasErrors()) {
 
@@ -47,7 +47,7 @@ public class ProductController {
       return ResponseEntity.badRequest().body(errors);
     }
 
-    ProductResponse productSaved = productService.save(prroductRequest);
+    ProductResponse productSaved = productService.save(productRequest);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(productSaved);
   }
@@ -76,6 +76,13 @@ public class ProductController {
     return new ResponseEntity<>(productService.getByName(name), HttpStatus.OK);
   }
 
+  @GetMapping("/category/{category}")
+  private ResponseEntity<List<ProductResponse>> findByCategory(@PathVariable String category) {
+    log.info("Fetching product by category: {}", category);
+
+    return new ResponseEntity<>(productService.getByCategory(category), HttpStatus.OK);
+  }
+
   @PutMapping("/{id}")
   private ResponseEntity<?> update(
           @PathVariable Long id,
@@ -96,5 +103,14 @@ public class ProductController {
     ProductResponse productUpdated = productService.update(id, productRequest);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(productUpdated);
+  }
+
+  @DeleteMapping("/{id}")
+  private ResponseEntity<?> delete(@PathVariable Long id) {
+    log.info("Deleting product by id: {}", id);
+
+    productService.delete(id);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }
