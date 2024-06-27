@@ -1,9 +1,8 @@
 package com.app.tienda.controller;
 
 import com.app.tienda.model.request.ProductRequest;
-import com.app.tienda.model.request.ProviderRequest;
+import com.app.tienda.model.response.IProductResponse;
 import com.app.tienda.model.response.ProductResponse;
-import com.app.tienda.model.response.ProviderResponse;
 import com.app.tienda.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +59,7 @@ public class ProductController {
   }
 
   @GetMapping("/supplier/{supplierId}")
-  private ResponseEntity<List<ProductResponse>> findProductBySupplier(@PathVariable Long supplierId) {
+  private ResponseEntity<List<IProductResponse>> findProductBySupplier(@PathVariable Long supplierId) {
     log.info("Fetching product by supplierId: {}", supplierId);
 
     return new ResponseEntity<>(

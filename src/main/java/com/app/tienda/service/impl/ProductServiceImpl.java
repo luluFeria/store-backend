@@ -7,6 +7,7 @@ import com.app.tienda.entity.ProviderEntity;
 import com.app.tienda.exception.InternalServerException;
 import com.app.tienda.exception.ResourceNotFoundException;
 import com.app.tienda.model.request.ProductRequest;
+import com.app.tienda.model.response.IProductResponse;
 import com.app.tienda.model.response.ProductResponse;
 import com.app.tienda.model.response.ProviderResponse;
 import com.app.tienda.repository.ProductRepository;
@@ -84,14 +85,10 @@ public class ProductServiceImpl implements IProductService {
   }
 
   @Override
-  public List<ProductResponse> findAllBySupplier(Long supplierId) {
+  public List<IProductResponse> findAllBySupplier(Long supplierId) {
     log.info("ProductServiceImpl - find products by supplierId {}", supplierId);
 
-    List<ProductEntity> products = productRepository.findAll();
-
-    return products.stream()
-            .map(productEntity -> modelMapper.map(productEntity, ProductResponse.class))
-            .collect(Collectors.toList());
+    return  productRepository.findProductsByProvider(supplierId);
   }
 
   @Override
@@ -119,14 +116,25 @@ public class ProductServiceImpl implements IProductService {
   @Override
   public ProductResponse update(Long id, ProductRequest productRequest) {
     try {
-      ProductEntity productEntity = productRepository.findById(id)
-              .orElseThrow(() -> new ResourceNotFoundException("No se encontró el producto con ID: " + id));;
+      Optional<ProductEntity> productOptional = productRepository.findById(id);
 
-      modelMapperSkipId.map(productRequest, productEntity);
+      if (productOptional.isPresent()) {
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setId(id);
+        productEntity.setName(productRequest.getName());
+        productEntity.setCategory(productRequest.getCategory());
+        productEntity.setPrice(productRequest.getPrice());
+        productEntity.setDescription(productRequest.getDescription());
+        productEntity.setProvider(productOptional.get().getProvider());
+        productEntity.setQuantityInInventory(productRequest.getQuantityInInventory());
 
-      ProductEntity productUpdated = productRepository.save(productEntity);
+        ProductEntity productUpdated = productRepository.save(productEntity);
+        return modelMapper.map(productUpdated, ProductResponse.class);
+      } else {
+        throw new ResourceNotFoundException(Message.ID_NOT_FOUND);
+      }
 
-      return modelMapper.map(productUpdated, ProductResponse.class);
+      //modelMapperSkipId.map(productRequest, productEntity);
     } catch (DataAccessException e) {
       log.error("Hubo un error al actualizar el producto: {}", e.getMessage());
       throw new InternalServerException(Message.UPDATE_ERROR + "el producto con ID: " + id, e);

@@ -1,20 +1,22 @@
 package com.app.tienda.repository;
 
 
+import com.app.tienda.constant.Querys;
 import com.app.tienda.entity.ProductEntity;
 import com.app.tienda.entity.ProviderEntity;
+import com.app.tienda.model.response.IProductResponse;
+import com.app.tienda.model.response.ProductResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
-
   /*
    TODO: Pendiente, esta por corregir
    */
-  @Query(value = "SELECT * FROM PROVIDERS p INNER JOIN ADDRESS a ON p.address_id = a.id WHERE a.city = :city", nativeQuery = true)
-  List<ProviderEntity> findProductsByProvider(String city);
+  @Query(value = Querys.QUERY_FILTER_PRODUCTS_BY_PROVIDER, nativeQuery = true)
+  List<IProductResponse> findProductsByProvider(Long id);
 
   /**
    *  Filtrando los productos por nombre.
@@ -22,7 +24,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
    * @param name filtrar los productos por nombre.
    * @return retorna una lista de productos que coincidan con el nombre.
    */
-  @Query(value = "SELECT * FROM PRODUCTS WHERE name = :name", nativeQuery = true)
+  @Query(value = Querys.QUERY_FILTER_PRODUCTS_BY_NAME, nativeQuery = true)
   List<ProductEntity> findByName(String name);
 
   /**
@@ -31,6 +33,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
    * @param category filtrar los productos por category.
    * @return retorna una lista de productos que coincidan con el category.
    */
-  @Query(value = "SELECT * FROM PRODUCTS WHERE category = :category", nativeQuery = true)
+  @Query(value = Querys.QUERY_FILTER_PRODUCTS_BY_CATEGORY, nativeQuery = true)
   List<ProductEntity> findByCategory(String category);
 }
