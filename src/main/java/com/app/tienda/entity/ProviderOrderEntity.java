@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.security.Provider;
 import java.time.LocalDateTime;
 
 @Getter
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @ToString
 @Entity
 @Table(name="provider_orders")
-public class ProviderOrder {
+public class ProviderOrderEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -24,6 +25,10 @@ public class ProviderOrder {
   private String status;
 
   private Double total;
+
+  @ManyToOne
+  @JoinColumn(name = "provider_id", nullable = false)
+  private Provider provider;
 
   /*@OneToMany
   @JoinColumn(name = "provider_id", referencedColumnName = "id")

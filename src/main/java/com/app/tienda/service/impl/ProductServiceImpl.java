@@ -39,8 +39,6 @@ public class ProductServiceImpl implements IProductService {
   @Autowired
   private ModelMapper modelMapper;
 
-  @Autowired
-  private ModelMapper modelMapperSkipId;
 
   @Override
   public List<ProductResponse> findAll() {
