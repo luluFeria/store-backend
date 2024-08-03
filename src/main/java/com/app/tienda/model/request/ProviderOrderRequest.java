@@ -5,25 +5,19 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
-@ToString
 public class ProviderOrderRequest {
-  private Long id;
+  private List<ProductOrder> products;
 
-  private LocalDateTime date;
-
-  @NotBlank(message = "Obligatoria")
-  @Size(max = 50, message = "Máximo 50 caracteres")
-  private String status;
-
-  private Double total;
-
+  @NotNull(message = "Requerido")
   private Long providerId;
-
 }
 
 
