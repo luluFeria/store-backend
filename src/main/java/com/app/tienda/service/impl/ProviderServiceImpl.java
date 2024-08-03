@@ -2,12 +2,10 @@ package com.app.tienda.service.impl;
 
 import com.app.tienda.constant.Message;
 import com.app.tienda.entity.AddressEntity;
-import com.app.tienda.entity.CustomerEntity;
 import com.app.tienda.entity.ProviderEntity;
 import com.app.tienda.exception.InternalServerException;
 import com.app.tienda.exception.ResourceNotFoundException;
 import com.app.tienda.model.request.ProviderRequest;
-import com.app.tienda.model.response.CustomerResponse;
 import com.app.tienda.model.response.ProviderResponse;
 import com.app.tienda.repository.AddressRepository;
 import com.app.tienda.repository.ProviderRepository;
