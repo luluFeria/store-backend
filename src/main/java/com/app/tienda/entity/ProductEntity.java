@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -21,9 +22,9 @@ public class ProductEntity {
 
   private String description;
 
-  private Integer price;
+  private BigDecimal price;
 
-  private Integer quantityInInventory;
+  private Integer quantity;
 
   @ManyToOne
   @JoinColumn(name = "provider_id")
