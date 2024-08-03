@@ -1,7 +1,6 @@
 package com.app.tienda.service.impl;
 
 import com.app.tienda.constant.Message;
-import com.app.tienda.entity.AddressEntity;
 import com.app.tienda.entity.ProductEntity;
 import com.app.tienda.entity.ProviderEntity;
 import com.app.tienda.exception.InternalServerException;
@@ -9,7 +8,6 @@ import com.app.tienda.exception.ResourceNotFoundException;
 import com.app.tienda.model.request.ProductRequest;
 import com.app.tienda.model.response.IProductResponse;
 import com.app.tienda.model.response.ProductResponse;
-import com.app.tienda.model.response.ProviderResponse;
 import com.app.tienda.repository.ProductRepository;
 import com.app.tienda.repository.ProviderRepository;
 import com.app.tienda.service.IProductService;
@@ -121,10 +119,10 @@ public class ProductServiceImpl implements IProductService {
         productEntity.setId(id);
         productEntity.setName(productRequest.getName());
         productEntity.setCategory(productRequest.getCategory());
-        productEntity.setPrice(productRequest.getPrice());
+        //productEntity.setPrice(productRequest.getPrice());
         productEntity.setDescription(productRequest.getDescription());
         productEntity.setProvider(productOptional.get().getProvider());
-        productEntity.setQuantityInInventory(productRequest.getQuantityInInventory());
+        productEntity.setQuantity(productRequest.getQuantityInInventory());
 
         ProductEntity productUpdated = productRepository.save(productEntity);
         return modelMapper.map(productUpdated, ProductResponse.class);
