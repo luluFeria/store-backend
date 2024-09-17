@@ -50,11 +50,21 @@ public class CustomerServiceImpl implements ICustomerService {
     log.info("CustomerServiceImpl - save: {}", customerRequest);
 
     try {
+      //CustomerEntity customerEntity = modelMapper.map(customerRequest, CustomerEntity.class);
 
-      CustomerEntity customerEntity = modelMapper.map(customerRequest, CustomerEntity.class);
-
+      CustomerEntity customerEntity = new CustomerEntity();
+      customerEntity.setName(customerRequest.getName());
+      customerEntity.setPhone(customerRequest.getPhone());
+      customerEntity.setEmail(customerRequest.getEmail());
+      customerEntity.setGender(customerRequest.getGender());
       // Obtener la dirección del customerEntity
-      AddressEntity addressEntity = customerEntity.getAddress();
+      AddressEntity addressEntity = new AddressEntity();
+      addressEntity.setCity(customerRequest.getAddress().getCity());
+      addressEntity.setColony(customerRequest.getAddress().getColony());
+      addressEntity.setStreet(customerRequest.getAddress().getStreet());
+      addressEntity.setMunicipality(customerRequest.getAddress().getMunicipality());
+
+      customerEntity.setAddress(addressEntity);
 
       // Guardar la dirección primero para obtener su ID generado
       addressRepository.save(addressEntity);
@@ -96,22 +106,21 @@ public class CustomerServiceImpl implements ICustomerService {
   public CustomerResponse getByName(String name) {
     log.info("CustomerServiceImpl - find customer by name {}", name);
 
-    Optional<CustomerEntity> customerOptional = customerRepository.findCustomerByName(name);
+    CustomerEntity customerEntity = customerRepository.findCustomerByName(name).
+        orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con nombre: " + name));
 
-    return customerOptional
-            .map(customerEntity -> modelMapper.map(customerEntity, CustomerResponse.class))
-            .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con nombre: " + name));
+    return  modelMapper.map(customerEntity, CustomerResponse.class);
+
   }
 
   @Override
   public CustomerResponse getByEmail(String email) {
     log.info("CustomerServiceImpl - find customer by email {}", email);
 
-    Optional<CustomerEntity> customerOptional = customerRepository.findCustomerByEmail(email);
+    CustomerEntity customerEntity = customerRepository.findCustomerByEmail(email).
+        orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con email: " + email));
 
-    return customerOptional
-            .map(customerEntity -> modelMapper.map(customerEntity, CustomerResponse.class))
-            .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con email: " + email));
+    return modelMapper.map(customerEntity, CustomerResponse.class);
   }
 
   @Override
