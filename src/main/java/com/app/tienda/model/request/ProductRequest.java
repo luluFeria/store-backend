@@ -1,5 +1,6 @@
 package com.app.tienda.model.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,11 +9,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
 @ToString
 public class ProductRequest {
+  @JsonIgnore
   @NotBlank(message = "Obligatorio")
   @Size(min = 3, max = 20, message = "Nombre: de 3 a 20 caracteres")
   private String name;
@@ -23,11 +26,7 @@ public class ProductRequest {
 
   @NotNull(message = "Obligatorio")
   @Min(value = 1, message = "El precio debe ser mayor que 0")
-  private Integer price;
-
-  @NotNull(message = "Obligatorio")
-  @Min(value = 0, message = "La cantidad en inventario debe ser mayor o igual a 0")
-  private Integer quantityInInventory;
+  private BigDecimal price;
 
   @NotNull(message = "Obligatorio")
   private Long idProvider;
