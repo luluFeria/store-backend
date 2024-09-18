@@ -1,6 +1,5 @@
 package com.app.tienda.model.response;
 
-import com.app.tienda.entity.ProviderEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,8 +17,6 @@ public class ProductResponse {
   private Integer price;
 
   private Integer quantityInInventory;
-
-  private ProviderResponse provider;
 
   private String category;
 }
