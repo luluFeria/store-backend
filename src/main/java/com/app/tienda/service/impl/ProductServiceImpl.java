@@ -10,6 +10,7 @@ import com.app.tienda.model.response.IProductResponse;
 import com.app.tienda.model.response.ProductResponse;
 import com.app.tienda.repository.ProductRepository;
 import com.app.tienda.repository.ProviderRepository;
+import com.app.tienda.service.IInventoryService;
 import com.app.tienda.service.IProductService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Transactional
 @Slf4j
 @Service
 public class ProductServiceImpl implements IProductService {
@@ -37,6 +37,9 @@ public class ProductServiceImpl implements IProductService {
   @Autowired
   private ModelMapper modelMapper;
 
+  @Autowired
+  private IInventoryService inventoryService;
+
 
   @Override
   public List<ProductResponse> findAll() {
@@ -49,6 +52,7 @@ public class ProductServiceImpl implements IProductService {
             .collect(Collectors.toList());
   }
 
+  @Transactional
   @Override
   public ProductResponse save(ProductRequest productRequest) {
     log.info("ProductServiceImpl - save: {}", productRequest);
@@ -60,9 +64,13 @@ public class ProductServiceImpl implements IProductService {
       ProductEntity productEntity = modelMapper.map(productRequest, ProductEntity.class);
       productEntity.setId(null);
       productEntity.setProvider(provider);
-      ProductEntity saved = productRepository.save(productEntity);
 
-      return modelMapper.map(saved, ProductResponse.class);
+      ProductEntity productSaved = productRepository.save(productEntity);
+
+      //Registrar producto en el inventario
+      inventoryService.addProduct(productEntity);
+
+      return modelMapper.map(productSaved, ProductResponse.class);
     } catch (Exception e) {
       log.error("Hubo un error al crear el proveedor : {}", e.getMessage());
       throw new InternalServerException(Message.SAVE_ERROR + "el proveedor");
@@ -111,6 +119,11 @@ public class ProductServiceImpl implements IProductService {
 
   @Override
   public ProductResponse update(Long id, ProductRequest productRequest) {
+    log.info("ProductServiceImpl - update: {}", productRequest);
+
+    ProviderEntity provider = this.providerRepository.findById(productRequest.getIdProvider())
+      .orElseThrow( () -> new ResourceNotFoundException("Provider not found"));
+
     try {
       Optional<ProductEntity> productOptional = productRepository.findById(id);
 
@@ -119,10 +132,9 @@ public class ProductServiceImpl implements IProductService {
         productEntity.setId(id);
         productEntity.setName(productRequest.getName());
         productEntity.setCategory(productRequest.getCategory());
-        //productEntity.setPrice(productRequest.getPrice());
+        productEntity.setPrice(productRequest.getPrice());
         productEntity.setDescription(productRequest.getDescription());
-        productEntity.setProvider(productOptional.get().getProvider());
-        productEntity.setQuantity(productRequest.getQuantityInInventory());
+        productEntity.setProvider(provider);
 
         ProductEntity productUpdated = productRepository.save(productEntity);
         return modelMapper.map(productUpdated, ProductResponse.class);
