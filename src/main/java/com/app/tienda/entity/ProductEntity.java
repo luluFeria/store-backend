@@ -24,10 +24,8 @@ public class ProductEntity {
 
   private BigDecimal price;
 
-  private Integer quantity;
-
   @ManyToOne
-  @JoinColumn(name = "provider_id")
+  @JoinColumn(name = "provider_id", referencedColumnName = "id")
   private ProviderEntity provider;
 
   private String category;
