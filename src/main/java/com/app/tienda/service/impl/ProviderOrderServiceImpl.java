@@ -15,6 +15,7 @@ import com.app.tienda.model.response.ProviderOrderWithDetailsResponse;
 import com.app.tienda.repository.ProductRepository;
 import com.app.tienda.repository.ProviderOrderRepository;
 import com.app.tienda.repository.ProviderRepository;
+import com.app.tienda.service.IInventoryService;
 import com.app.tienda.service.IProviderOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -45,6 +46,9 @@ public class ProviderOrderServiceImpl implements IProviderOrderService {
   @Autowired
   private ModelMapper modelMapper;
 
+  @Autowired
+  private IInventoryService inventoryService;
+
   @Override
   public List<ProviderOrderWithDetailsResponse> findAll() {
     return null;
@@ -55,6 +59,10 @@ public class ProviderOrderServiceImpl implements IProviderOrderService {
 
     List<ISupplierOrderWithDetailsResponse> providerOrders = providerOrderRepository.findAllProviderOrders();
 
+    return this.responseOrder(providerOrders);
+  }
+
+  private List<ProviderOrderWithDetailsResponse> responseOrder(List<ISupplierOrderWithDetailsResponse> providerOrders) {
     Map<Long, ProviderOrderWithDetailsResponse> orderMap = new LinkedHashMap<>();
 
     // Obtener o crear la orden proveedor si no existe en el mapa
@@ -103,7 +111,7 @@ public class ProviderOrderServiceImpl implements IProviderOrderService {
 
         ProviderOrderProductResponse productResponse = new ProviderOrderProductResponse();
         productResponse.setName(productEntity.getName());
-        productResponse.setQuantity(productEntity.getQuantity());
+        productResponse.setQuantity(product.getQuantity());
         productResponse.setUnitPrice(productEntity.getPrice());
 
         return productResponse;
@@ -120,31 +128,7 @@ public class ProviderOrderServiceImpl implements IProviderOrderService {
 
     List<ISupplierOrderWithDetailsResponse> providerOrders = providerOrderRepository.getByProviderId(providerId);
 
-    Map<Long, ProviderOrderWithDetailsResponse> orderMap = new LinkedHashMap<>();
-
-    providerOrders.forEach(projection -> {
-      Long orderId = projection.getOrderId();
-
-      ProviderOrderWithDetailsResponse orderResponse = orderMap.computeIfAbsent(orderId, id -> {
-        ProviderOrderWithDetailsResponse response = new ProviderOrderWithDetailsResponse();
-        response.setId(id);
-        response.setDate(projection.getDate());
-        response.setStatus(projection.getStatus());
-        response.setTotalAmount(projection.getTotalAmount());
-        response.setProducts(new ArrayList<>());
-
-        return response;
-      });
-
-      ProviderOrderProductResponse productResponse = new ProviderOrderProductResponse();
-      productResponse.setName(projection.getProduct());
-      productResponse.setUnitPrice(projection.getPrice());
-      productResponse.setQuantity(projection.getQuantity());
-
-      orderResponse.getProducts().add(productResponse);
-    });
-
-    return new ArrayList<>(orderMap.values());
+    return this.responseOrder(providerOrders);
   }
 
   @Override
@@ -153,31 +137,7 @@ public class ProviderOrderServiceImpl implements IProviderOrderService {
 
     List<ISupplierOrderWithDetailsResponse> providerOrders = providerOrderRepository.findByStatus(status);
 
-    Map<Long, ProviderOrderWithDetailsResponse> orderMap = new LinkedHashMap<>();
-
-    providerOrders.forEach(projection -> {
-      Long orderId = projection.getOrderId();
-
-      ProviderOrderWithDetailsResponse orderResponse = orderMap.computeIfAbsent(orderId, id -> {
-        ProviderOrderWithDetailsResponse response = new ProviderOrderWithDetailsResponse();
-        response.setId(id);
-        response.setDate(projection.getDate());
-        response.setStatus(projection.getStatus());
-        response.setTotalAmount(projection.getTotalAmount());
-        response.setProducts(new ArrayList<>());
-
-        return response;
-      });
-
-      ProviderOrderProductResponse productResponse = new ProviderOrderProductResponse();
-      productResponse.setName(projection.getProduct());
-      productResponse.setUnitPrice(projection.getPrice());
-      productResponse.setQuantity(projection.getQuantity());
-
-      orderResponse.getProducts().add(productResponse);
-    });
-
-    return new ArrayList<>(orderMap.values());
+    return this.responseOrder(providerOrders);
   }
 
   @Override
@@ -191,9 +151,20 @@ public class ProviderOrderServiceImpl implements IProviderOrderService {
     ProviderOrderEntity orderOptional = providerOrderRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("The order was not found."));
 
+    if (!(orderOptional.getStatus().equals(OrderStatus.PENDING.name()))) {
+      throw new IllegalArgumentException("You are only allowed to update the status of pending orders");
+    }
+
     try {
       orderOptional.setStatus(status);
-      providerOrderRepository.save(orderOptional);
+      ProviderOrderEntity providerOrderEntity= providerOrderRepository.save(orderOptional);
+
+      //TODO: Se va actualizar el inventario
+      //inventoryService.update();
+
+      if(providerOrderEntity.getStatus().equals(OrderStatus.COMPLETED.name())) {
+        this.inventoryService.update(providerOrderEntity.getProducts());
+      }
 
       return "Status updated successfully";
     } catch (DataAccessException e) {
@@ -239,7 +210,7 @@ public class ProviderOrderServiceImpl implements IProviderOrderService {
       log.info("saved: {}", saved);
 
       return Message.SAVE;
-      //return modelMapper.map(saved, ProviderOrderResponse.class);
+
     } catch (Exception e) {
       log.error("Error creating the provider order: {}", e.getMessage());
       throw new InternalServerException(Message.SAVE_ERROR);
