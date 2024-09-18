@@ -12,7 +12,6 @@ import javax.persistence.*;
 @Entity
 @Table(name="customers")
 public class CustomerEntity {
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
